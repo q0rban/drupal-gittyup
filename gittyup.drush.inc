@@ -1,5 +1,5 @@
 <?php
-// $Id$
+// $Id: gittyup.drush.inc,v 1.2 2010/06/18 18:43:03 q0rban Exp $
 
 /**
  * @file
