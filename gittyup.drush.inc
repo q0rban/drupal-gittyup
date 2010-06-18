@@ -113,17 +113,34 @@ function gittyup_shell_exec($commands = array(), $args = array()) {
   $args = array_merge((array) $command, $args);
 
   $success = call_user_func_array('drush_shell_exec', $args);
-  $output = $output = implode("\n", (array) drush_shell_exec_output());
+  $output = implode("\n", (array) drush_shell_exec_output());
 
   if (!$success && !drush_get_context('DRUSH_SIMULATE')) {
     if ($output) {
-      drush_set_error($output);
+      gittyup_check_error($output);
     }
     else {
       drush_set_error(dt('There was an error executing the following command: %command.', array('%command' => $command)));
     }
   }
   else if ($output) {
-    drush_log($output, 'success');
+    if (!gittyup_check_error($output)) {
+      drush_log($output, 'success');
+    }
   }
+}
+
+/**
+ * Checks for various git errors via regex on output.
+ */
+function gittyup_check_error($output) {
+  $error = FALSE;
+
+  if (preg_match('(needs update)', $output)) {
+    drush_log($output, 'warning');
+    drush_log(dt('You may have uncommitted changes to the repository. Try committing all changes and re-running the command.'), 'warning');
+    $error = TRUE;
+  }
+
+  return $error;
 }
