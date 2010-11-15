@@ -64,7 +64,7 @@ function drush_gittyup() {
       // Let's check to see if there's a tag first
       if ($tag) {
         $commands[] = "git fetch $origin"; 
-        $commands[] = "git checkout $tag ./";
+        $commands[] = "git checkout $tag";
       }
       // If not, we're just going to do a git pull
       else {
